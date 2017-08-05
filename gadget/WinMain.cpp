@@ -8,6 +8,7 @@
 #include<time.h>
 
 POINT  pt = { 5, 5 };
+auto a=show();
 HINSTANCE hInst;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -33,10 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     if (!RegisterClassEx(&wcex))
     {
-        MessageBox(NULL,
-            _T("error"),
-            _T("gadget"),
-            NULL);
+        MessageBox(NULL,_T("error"),_T("gadget"),NULL);
 
         return 1;
     }
@@ -80,7 +78,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_TIMER:
         _stprintf_s(szstr, _T("%s"), "mazai");
         InvalidateRect(hWnd, NULL, TRUE);
-
+        a.showCpu(hWnd);
 
         break;
     case WM_DESTROY:

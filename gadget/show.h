@@ -70,10 +70,12 @@ void show::showCpu(HWND hWnd) {
 
         hdc = BeginPaint(hWnd, &ps);
         TCHAR   szstr[256];
-        _stprintf_s(szstr, _T("CPU使用率は%4uです"), cpuRatio[0]);
+        _stprintf_s(szstr, _T("CPU使用率は%dです"), cpuRatio[0]);
+
         //_stprintf_s(szstr, _T("%s"),  ctime(&t));
-        TextOut(hdc, 5, 5,szstr, _tcslen(szstr));
+        TextOut(hdc, 50, 50,szstr, _tcslen(szstr));
         EndPaint(hWnd, &ps);
+
 
 
         hdc = BeginPaint(hWnd, &ps);
