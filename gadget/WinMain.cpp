@@ -5,7 +5,6 @@
 #include"show.h"
 #include<time.h>
 
-POINT  pt = { 5, 5 };
 auto a=show();
 HINSTANCE hInst;
 
@@ -59,12 +58,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
     return (int)msg.wParam;
 }
-
-
-int i = 0;
-HPEN        hPen;
-
-
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

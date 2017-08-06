@@ -26,8 +26,8 @@ private:
     PDH_HCOUNTER hCounter[17];
     PDH_FMT_COUNTERVALUE fntValue;
     std::deque<char> cpuRatio;
-    //HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 200, 150));
-    HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+    HPEN hPenG2 = CreatePen(PS_SOLID, 1, RGB(0, 220, 150));
+    HPEN hPenG = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
 
 
 
@@ -62,8 +62,8 @@ show::~show()
 }
 
 void show::showCpu(HWND hWnd, HDC hdc) {
-    hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
-    SelectObject(hdc, hPen);
+    //hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+    SelectObject(hdc, hPenG);
 
     for (int n = core; n < core + 1; n++) {
         //Sleep(1000);
@@ -71,8 +71,6 @@ void show::showCpu(HWND hWnd, HDC hdc) {
         PdhGetFormattedCounterValue(hCounter[n], PDH_FMT_LONG, NULL, &fntValue);
         cpuRatio.push_front(fntValue.longValue);//CPUŽg—p—¦
  
-        time_t t = time(NULL);
-
         PAINTSTRUCT ps;
 
         //HPEN        hPen;
@@ -83,28 +81,50 @@ void show::showCpu(HWND hWnd, HDC hdc) {
         LineTo(hdc, 350, 200); 
         LineTo(hdc, 350, 50);
         LineTo(hdc, 50, 50);
-        if (cpuRatio.size() > 100)cpuRatio.pop_back()   ;
+        if (cpuRatio.size() > 300)cpuRatio.pop_back()   ;
         //hPen = CreatePen(PS_SOLID, 20, RGB(0, 200, 150));
         //hOldPen = (HPEN)SelectObject(hdc, hPen);
-        MoveToEx(hdc, 50+100-cpuRatio.back(),300, NULL);
-        EndPaint(hWnd, &ps);
-
+        //MoveToEx(hdc,350, 50+100-cpuRatio.back(), NULL);
 
         //for (int i = cpuRatio.size() - 1;i>0;--i) {
-        //    LineTo(hdc, 50 + 100 - cpuRatio[i]+10, 350-i);
+        //    LineTo(hdc,350 - i,50 + 100 - cpuRatio[i]+10);
         //}
+
+        SelectObject(hdc, hPenG2);
+
+        MoveToEx(hdc, 350- cpuRatio.size(), 50 + 100 - cpuRatio.back(), NULL);
+
+        for (int i = cpuRatio.size() - 1;i>0;--i) {
+            LineTo(hdc, 350 - i, 50 + 100 - cpuRatio[i]);
+        }
+        EndPaint(hWnd, &ps);
+
         //InvalidateRect(hWnd, NULL, TRUE);
+
+        //TCHAR   szstr[256];
+        //_stprintf_s(szstr, _T("mazai_%d"), cpuRatio.size());
+        //TextOut(hdc, 5, 100, szstr, _tcslen(szstr) - 1);
     }
 }
 
 
 void show::showTime(HWND hWnd, HDC hdc) {
+    //LOGFONT lfFont;
+    //lfFont.lfHeight = 10;
+    //lfFont.lfWeight = FW_EXTRALIGHT;
 
     PAINTSTRUCT ps;
     TCHAR   szstr[256];
     time_t t = time(NULL);
     _stprintf_s(szstr, _T("%s"), ctime(&t));
-    TextOut(hdc, 5, 5, szstr, _tcslen(szstr) - 1);
+    SetTextColor(hdc, RGB(255, 0, 0));
+    //hdc = BeginPaint(hWnd, &ps);
+
+    //HFONT  hFont = CreateFontIndirect(&lfFont);
+
+    //SelectObject(hdc, hFont);
+
+    TextOut(hdc, 10, 5, szstr, _tcslen(szstr) - 1);
 }
 
 void show::test(HWND hWnd, HDC hdc) {
