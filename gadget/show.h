@@ -16,8 +16,9 @@ class show
 public:
     show();
     ~show();
-    void showCpu(HWND hWnd);
-
+    void showCpu(HWND, HDC);
+    void showTime(HWND,HDC );
+    void test(HWND, HDC);
 private:
     int ram;
     int core;
@@ -25,6 +26,10 @@ private:
     PDH_HCOUNTER hCounter[17];
     PDH_FMT_COUNTERVALUE fntValue;
     std::deque<char> cpuRatio;
+    //HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 200, 150));
+    HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+
+
 
 
 
@@ -56,7 +61,10 @@ show::~show()
 {
 }
 
-void show::showCpu(HWND hWnd) {
+void show::showCpu(HWND hWnd, HDC hdc) {
+    hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+    SelectObject(hdc, hPen);
+
     for (int n = core; n < core + 1; n++) {
         //Sleep(1000);
         PdhCollectQueryData(hQuery[n]);
@@ -65,34 +73,40 @@ void show::showCpu(HWND hWnd) {
  
         time_t t = time(NULL);
 
-        HDC hdc;
         PAINTSTRUCT ps;
 
-        hdc = BeginPaint(hWnd, &ps);
-        TCHAR   szstr[256];
-        _stprintf_s(szstr, _T("CPUŽg—p—¦‚Í%d‚Å‚·"), cpuRatio[0]);
-
-        //_stprintf_s(szstr, _T("%s"),  ctime(&t));
-        TextOut(hdc, 50, 50,szstr, _tcslen(szstr));
-        EndPaint(hWnd, &ps);
-
-
-
-        hdc = BeginPaint(hWnd, &ps);
-        HPEN        hPen, hOldPen;
-        hPen = CreatePen(PS_SOLID, 1, RGB(0, 200, 150));
-        hOldPen = (HPEN)SelectObject(hdc, hPen);
+        //HPEN        hPen;
+        //hPen = CreatePen(PS_SOLID, 10, RGB(0, 200, 150));
+        //hOldPen = (HPEN)SelectObject(hdc, hPen);
         MoveToEx(hdc, 50, 50, NULL);
         LineTo(hdc, 50, 200);
         LineTo(hdc, 350, 200); 
         LineTo(hdc, 350, 50);
         LineTo(hdc, 50, 50);
-        if (cpuRatio.size() > 100)cpuRatio.pop_back();
-        hPen = CreatePen(PS_SOLID, 20, RGB(0, 200, 150));
-        hOldPen = (HPEN)SelectObject(hdc, hPen);
+        if (cpuRatio.size() > 100)cpuRatio.pop_back()   ;
+        //hPen = CreatePen(PS_SOLID, 20, RGB(0, 200, 150));
+        //hOldPen = (HPEN)SelectObject(hdc, hPen);
         MoveToEx(hdc, 50+100-cpuRatio.back(),300, NULL);
-        for (int i = cpuRatio.size() - 1;i>0;--i) {
-            LineTo(hdc, 50 + 100 - cpuRatio[i]+10, 350-i);
-        }
+        EndPaint(hWnd, &ps);
+
+
+        //for (int i = cpuRatio.size() - 1;i>0;--i) {
+        //    LineTo(hdc, 50 + 100 - cpuRatio[i]+10, 350-i);
+        //}
+        //InvalidateRect(hWnd, NULL, TRUE);
     }
+}
+
+
+void show::showTime(HWND hWnd, HDC hdc) {
+
+    PAINTSTRUCT ps;
+    TCHAR   szstr[256];
+    time_t t = time(NULL);
+    _stprintf_s(szstr, _T("%s"), ctime(&t));
+    TextOut(hdc, 5, 5, szstr, _tcslen(szstr) - 1);
+}
+
+void show::test(HWND hWnd, HDC hdc) {
+
 }

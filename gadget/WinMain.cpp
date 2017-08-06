@@ -1,6 +1,4 @@
-﻿
-
-#include <windows.h>
+﻿#include <windows.h>
 #include <stdlib.h>
 #include <string.h>
 #include <tchar.h>
@@ -12,7 +10,7 @@ auto a=show();
 HINSTANCE hInst;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
+    
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     static TCHAR szWindowClass[] = _T("gadget");
@@ -64,6 +62,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 int i = 0;
+HPEN        hPen;
+
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -71,31 +72,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     PAINTSTRUCT ps;
     TCHAR   szstr[256];
 
+
     switch (message) {
     case WM_CREATE:
         SetTimer(hWnd, 1, 1000, NULL);
         break;
     case WM_TIMER:
-        _stprintf_s(szstr, _T("%s"), "mazai");
         InvalidateRect(hWnd, NULL, TRUE);
-        a.showCpu(hWnd);
-
         break;
     case WM_DESTROY:
         KillTimer(hWnd, 1);
         PostQuitMessage(0);
         return 0;
     case WM_PAINT:
-        time_t t = time(NULL);
-        _stprintf_s(szstr, _T("%s"), ctime(&t));
-        hdc = BeginPaint(hWnd, &ps);
-        //_stprintf_s(szstr, _T("CPU使用率は%4uです"), cpuRatio[0]);
-        TextOut(hdc,
-            5, 5,
-            szstr, _tcslen(szstr) - 1);
-        EndPaint(hWnd, &ps);
 
-        break;
+        hdc = BeginPaint(hWnd, &ps);
+        //a.test(hWnd,hdc);
+        a.showTime(hWnd,hdc);
+        a.showCpu(hWnd,hdc);
+        EndPaint(hWnd, &ps);
 
         return 0;
     }
