@@ -37,7 +37,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     hInst = hInstance;
-    HWND hWnd = CreateWindowEx(WS_EX_TOOLWINDOW | WS_EX_LAYERED | /*WS_EX_TRANSPARENT |*/ WS_EX_TOPMOST, szWindowClass, _T(""), WS_POPUP | WS_SYSMENU | WS_VISIBLE, 1500, 0, 420, 1080, NULL, NULL, hInstance, NULL);
+    HWND hWnd = CreateWindowEx(WS_EX_TOOLWINDOW | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOPMOST, szWindowClass, _T(""), WS_POPUP | WS_SYSMENU | WS_VISIBLE, 1500, 0, 420, 1080, NULL, NULL, hInstance, NULL);
     if (!hWnd)
     {
         MessageBox(NULL, _T("ウィンドウ生成に失敗しました!"), _T("Gadget"), NULL);
@@ -83,6 +83,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         //a.test(hWnd,hdc);
         a.showTime(hWnd,hdc);
         a.showCpu(hWnd,hdc);
+        a.showMem(hWnd, hdc);
         EndPaint(hWnd, &ps);
 
         return 0;
